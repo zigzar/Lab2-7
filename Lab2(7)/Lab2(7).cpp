@@ -29,7 +29,7 @@ void fillArrMan(int* arr, int size);
 void fillArrFile(int* arr, int size);
 
 
-int* array = nullptr;
+int* arr = nullptr;
 int arrsize = 0;
 List list;
 
@@ -138,7 +138,7 @@ void fillArrFile(int* arr, int size)
 			if (fin.eof()) {
 				cout << "В файле недостаточно чисел. Пожалуйста, введите больше чисел в файл и нажмите Enter" << endl;
 				system("pause");
-				fillArrFile(arr, size);
+				fillMenu();
 			}
 			fin >> arr[i];
 		}
@@ -147,6 +147,9 @@ void fillArrFile(int* arr, int size)
 	catch (const exception&)
 	{
 		cout << "Ошибка открытия файла" << endl;
+		ofstream fout;
+		fout.open(dataFile);
+		fout.close();
 	}
 }
 
@@ -217,14 +220,4 @@ void fillMenu()
 	outArr(arr, size);
 	cout << endl;
 	system("pause");
-
-
-	cout << "ESC для выхода в главное меню...";
-	char code = _getch();
-	while (!(code == 27)) {
-		code = _getch();
-	}
-	menu();
-
-	delete[] arr;
 }
