@@ -23,14 +23,14 @@ int getFillAns();
 void menu();
 void fillMenu();
 
-void outArr(int* arr, int size);
-void fillArrRand(int* arr, int size);
-void fillArrMan(int* arr, int size);
-void fillArrFile(int* arr, int size);
+void outArr();
+void fillArrRand();
+void fillArrMan();
+void fillArrFile();
 
 
 int* arr = nullptr;
-int arrsize = 0;
+int arrSize = 0;
 List list;
 
 int main()
@@ -104,36 +104,36 @@ void menu() {
 	} while (true);
 }
 
-void outArr(int* arr, int size)
+void outArr()
 {
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < arrSize; i++)
 	{
 		cout << arr[i] << " ";
 	}
 }
-void fillArrRand(int* arr, int size)
+void fillArrRand()
 {
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < arrSize; i++)
 	{
 		arr[i] = rand() % 100;
 	}
 }
-void fillArrMan(int* arr, int size)
+void fillArrMan()
 {
 	cout << "Введите значения: " << endl;
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < arrSize; i++)
 	{
 		cout << "Введите arr[" << i << "] ";
 		arr[i] = inputCheck();
 	}
 }
-void fillArrFile(int* arr, int size)
+void fillArrFile()
 {
 	ifstream fin;
 	try
 	{
 		fin.open(dataFile);
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < arrSize; i++)
 		{
 			if (fin.eof()) {
 				cout << "В файле недостаточно чисел. Пожалуйста, введите больше чисел в файл и нажмите Enter" << endl;
@@ -194,30 +194,29 @@ int getFillAns() {
 
 void fillMenu()
 {
-	int size;
 	cout << "Введите размерность массива" << endl;
-	cin >> size;
-	int* arr = new int[size];
+	cin >> arrSize;
+	arr = new int[arrSize];
 
 	int answer = getFillAns();
 
 	switch (answer)
 	{
 	case 0:
-		fillArrRand(arr, size);
+		fillArrRand();
 		break;
 	case 1:
-		fillArrMan(arr, size);
+		fillArrMan();
 		break;
 	case 2:
-		fillArrFile(arr, size);
+		fillArrFile();
 		break;
 	default:
 		break;
 	}
 
 	cout << "Ваш массив/список: ";
-	outArr(arr, size);
+	outArr();
 	cout << endl;
 	system("pause");
 }
