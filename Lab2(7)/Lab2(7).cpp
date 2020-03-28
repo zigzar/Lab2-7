@@ -1,9 +1,11 @@
 ﻿#include <iostream>
+#include <sstream>
 #include <fstream>
 #include <ctime>
 #include <chrono>
 #include <conio.h>
 #include <Windows.h>
+#include <string>
 #include "inputCheck.h"
 
 using namespace std;
@@ -15,7 +17,7 @@ struct List
 	List* next;
 };
 
-const char dataFile[] = "data.txt";
+const string dataFile = "data.txt";
 
 int getAns();
 int getFillAns();
@@ -23,6 +25,8 @@ int getFillAns();
 void menu();
 void fillMenu();
 
+void deleteArr();
+void push_back_arr();
 void outArr();
 void fillArrRand();
 void fillArrMan();
@@ -89,7 +93,7 @@ void menu() {
 			fillMenu();
 			break;
 		case 1:
-			
+
 			break;
 		case 2:
 			
@@ -113,19 +117,50 @@ void outArr()
 }
 void fillArrRand()
 {
+	cout << "Введите размерность массива" << endl;
+	cin >> arrSize;
+	arr = new int[arrSize];
 	for (int i = 0; i < arrSize; i++)
 	{
 		arr[i] = rand() % 100;
 	}
 }
-void fillArrMan()
+
+void deleteArr()
 {
-	cout << "Введите значения: " << endl;
+	delete[] arr;
+	arr = nullptr;
+	arrSize = 0;
+}
+
+void push_back_arr(int value) {
+	int* newArr = new int[arrSize + 1];
+
 	for (int i = 0; i < arrSize; i++)
 	{
-		cout << "Введите arr[" << i << "] ";
-		arr[i] = inputCheck();
+		newArr[i] = arr[i];
 	}
+
+	delete[] arr;
+	newArr[arrSize] = value;
+	arrSize++;
+	arr = newArr;
+}
+
+void fillArrMan()
+{
+	cout << "Введите значения через пробел и нажмите Enter: " << endl;
+	string buffer;
+	string number;
+	stringstream bufStream;
+	getline(cin, buffer);
+	bufStream << buffer;
+	cin.clear();
+	while (getline(bufStream, number, ' '))
+	{
+		push_back_arr(stoi(number));
+	}
+		
 }
 void fillArrFile()
 {
@@ -155,7 +190,7 @@ void fillArrFile()
 
 int getFillAns() {
 	int choice = 0;
-	int options = 3;
+	int options = 4;
 	int ch;
 	while (true) {
 		system("cls");
@@ -169,6 +204,9 @@ int getFillAns() {
 
 		if (choice == 2) cout << "-> Прочитать из файла" << endl;
 		else  cout << "   Прочитать из файла" << endl;
+
+		if (choice == 3) cout << "-> Назад" << endl;
+		else  cout << "   Назад" << endl;
 
 		ch = _getch();
 		if (ch == 224)
@@ -194,11 +232,8 @@ int getFillAns() {
 
 void fillMenu()
 {
-	cout << "Введите размерность массива" << endl;
-	cin >> arrSize;
-	arr = new int[arrSize];
-
 	int answer = getFillAns();
+	if (answer != 3) deleteArr();
 
 	switch (answer)
 	{
@@ -211,7 +246,8 @@ void fillMenu()
 	case 2:
 		fillArrFile();
 		break;
-	default:
+	case 3:
+		return;
 		break;
 	}
 

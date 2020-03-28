@@ -12,7 +12,7 @@ int inputCheck() {
 			std::cout << std::endl << "Ошибка ввода. Пожалуйста, попробуйте ввести число арабскими цифрами в естесственном виде: ";
 		}
 		else {
-			std::cin.ignore(std::cin.rdbuf()->in_avail());
+			//std::cin.ignore(std::cin.rdbuf()->in_avail());
 			return input;
 		}
 	}
