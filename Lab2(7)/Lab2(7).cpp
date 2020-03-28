@@ -119,6 +119,8 @@ void fillArrRand()
 {
 	cout << "Введите размерность массива" << endl;
 	cin >> arrSize;
+	cin.clear();
+	cin.ignore(cin.rdbuf()->in_avail());
 	arr = new int[arrSize];
 	for (int i = 0; i < arrSize; i++)
 	{
@@ -168,14 +170,15 @@ void fillArrFile()
 	try
 	{
 		fin.open(dataFile);
-		for (int i = 0; i < arrSize; i++)
+		string buffer;
+		string number;
+		stringstream bufStream;
+		getline(fin, buffer);
+		bufStream << buffer;
+		fin.clear();
+		while (getline(bufStream, number, ' '))
 		{
-			if (fin.eof()) {
-				cout << "В файле недостаточно чисел. Пожалуйста, введите больше чисел в файл и нажмите Enter" << endl;
-				system("pause");
-				fillMenu();
-			}
-			fin >> arr[i];
+			push_back_arr(stoi(number));
 		}
 		fin.close();
 	}
