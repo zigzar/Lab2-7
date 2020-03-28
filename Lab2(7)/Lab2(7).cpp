@@ -26,7 +26,7 @@ void menu();
 void fillMenu();
 
 void deleteArr();
-void push_back_arr();
+void pushBackArr(int value);
 void outArr();
 void fillArrRand();
 void fillArrMan();
@@ -135,7 +135,7 @@ void deleteArr()
 	arrSize = 0;
 }
 
-void push_back_arr(int value) {
+void pushBackArr(int value) {
 	int* newArr = new int[arrSize + 1];
 
 	for (int i = 0; i < arrSize; i++)
@@ -151,7 +151,7 @@ void push_back_arr(int value) {
 
 void fillArrMan()
 {
-	cout << "Введите значения через пробел и нажмите Enter: " << endl;
+	cout << "Введите значения через пробел и нажмите Enter:" << endl;
 	string buffer;
 	string number;
 	stringstream bufStream;
@@ -160,7 +160,7 @@ void fillArrMan()
 	cin.clear();
 	while (getline(bufStream, number, ' '))
 	{
-		push_back_arr(stoi(number));
+		pushBackArr(stoi(number));
 	}
 		
 }
@@ -175,10 +175,9 @@ void fillArrFile()
 		stringstream bufStream;
 		getline(fin, buffer);
 		bufStream << buffer;
-		fin.clear();
 		while (getline(bufStream, number, ' '))
 		{
-			push_back_arr(stoi(number));
+			pushBackArr(stoi(number));
 		}
 		fin.close();
 	}
