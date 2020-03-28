@@ -25,7 +25,10 @@ int getFillAns();
 void menu();
 void fillMenu();
 
+void insert();
+
 void deleteArr();
+void insertArr(int value, int index);
 void pushBackArr(int value);
 void outArr();
 void fillArrRand();
@@ -93,7 +96,7 @@ void menu() {
 			fillMenu();
 			break;
 		case 1:
-
+			insert();
 			break;
 		case 2:
 			
@@ -114,6 +117,7 @@ void outArr()
 	{
 		cout << arr[i] << " ";
 	}
+	cout << endl;
 }
 void fillArrRand()
 {
@@ -128,6 +132,26 @@ void fillArrRand()
 	}
 }
 
+void insert()
+{
+	int value;
+	int index;
+
+	cout << "Введите значение: ";
+	value = inputCheck();
+	cout << endl;
+
+	cout << "Введите индекс, который займет значение: ";
+	index = inputCheck();
+	cout << endl << endl;
+
+	insertArr(value, index);
+
+	cout << "Массив/список после изменений:" << endl;
+	outArr();
+	system("pause");
+}
+
 void deleteArr()
 {
 	delete[] arr;
@@ -135,7 +159,39 @@ void deleteArr()
 	arrSize = 0;
 }
 
-void pushBackArr(int value) {
+void insertArr(int value, int index)
+{
+	if (index >= arrSize)
+	{
+		pushBackArr(value);
+	}
+	else if (index >= 0)
+	{
+		int* newArr = new int[arrSize + 1];
+		for (int i = arrSize; i > index; i--)
+		{
+			newArr[i] = arr[i - 1];
+		}
+		for (int i = 0; i < index; i++)
+		{
+			newArr[i] = arr[i];
+		}
+
+		delete[] arr;
+		newArr[index] = value;
+		arrSize++;
+		arr = newArr;
+	}
+	else
+	{
+		cerr << "Указан неверный индекс. Пожалуйста введите другой индекс" << endl;
+		system("pause");
+		insert();
+	}
+}
+
+void pushBackArr(int value) 
+{
 	int* newArr = new int[arrSize + 1];
 
 	for (int i = 0; i < arrSize; i++)
