@@ -21,12 +21,16 @@ const string dataFile = "data.txt";
 
 int getAns();
 int getFillAns();
+int getDeleteAns();
 
 void menu();
 void fillMenu();
+void deleteMenu();
 
 void insert();
 
+void delByValue();
+void delByIndex();
 void deleteArr(int index);
 void insertArr(int value, int index);
 void pushBackArr(int value);
@@ -34,7 +38,6 @@ void outArr();
 void fillArrRand();
 void fillArrMan();
 void fillArrFile();
-
 
 int* arr = nullptr;
 int arrSize = 0;
@@ -99,11 +102,7 @@ void menu() {
 			insert();
 			break;
 		case 2:
-			int toDel;
-			cin >> toDel;
-			deleteArr(toDel);
-			outArr();
-			system("pause");
+			deleteMenu();
 			break;
 		case 3:
 			
@@ -113,6 +112,60 @@ void menu() {
 			break;
 		}
 	} while (true);
+}
+
+void deleteMenu()
+{
+	int answer = getDeleteAns();
+	switch (answer)
+	{
+	case 0:
+		delByIndex();
+		outArr();
+		system("pause");
+		break;
+	case 1:
+		delByValue();
+		outArr();
+		system("pause");
+		break;
+	case 2:
+		return;
+		break;
+	}
+}
+
+void delByValue()
+{
+	int value;
+	int index = -1;
+	cout << "Введите значение: ";
+	cin >> value;
+	for (int i = 0; i < arrSize; i++)
+	{
+		if (arr[i] == value)
+		{
+			index = i;
+			break;
+		}
+	}
+	if (index != -1)
+	{
+		deleteArr(index);
+	}
+	else
+	{
+		cerr << "Значение не найдено. Попробуйте ввести другое число: ";
+		delByValue();
+	}
+}
+
+void delByIndex()
+{
+	int index;
+	cout << "Введите индекс: ";
+	cin >> index;
+	deleteArr(index);
 }
 
 void outArr()
@@ -198,6 +251,7 @@ void deleteArr(int index)
 {
 	int* newArr = new int[arrSize - 1];
 
+	if (index > arrSize) index = arrSize;
 	for (int i = 0; i < index; i++)
 	{
 		newArr[i] = arr[i];
@@ -304,6 +358,45 @@ int getFillAns() {
 			choice++;
 		}
 		if (ch == 27) menu();
+		if (ch == 13) break;
+	}
+	system("cls");
+	return choice;
+}
+
+int getDeleteAns()
+{
+	int choice = 0;
+	int options = 3;
+	int ch;
+	while (true) {
+		system("cls");
+		cout << "Выберите способ удаления элемента:" << endl << endl;
+		choice = (choice + options) % options;
+		if (choice == 0) cout << "-> По индексу" << endl;
+		else  cout << "   По индексу" << endl;
+
+		if (choice == 1) cout << "-> По значению" << endl;
+		else  cout << "   По значению" << endl;
+
+		if (choice == 2) cout << "-> Назад" << endl;
+		else  cout << "   Назад" << endl;
+
+		ch = _getch();
+		if (ch == 224)
+		{
+			ch = _getch();
+			if (ch == 80) choice++;
+			if (ch == 72) choice--;
+		}
+		if (ch == 119)
+		{
+			choice--;
+		}
+		if (ch == 115)
+		{
+			choice++;
+		}
 		if (ch == 13) break;
 	}
 	system("cls");
