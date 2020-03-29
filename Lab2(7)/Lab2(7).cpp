@@ -27,7 +27,7 @@ void fillMenu();
 
 void insert();
 
-void deleteArr();
+void deleteArr(int index);
 void insertArr(int value, int index);
 void pushBackArr(int value);
 void outArr();
@@ -99,7 +99,11 @@ void menu() {
 			insert();
 			break;
 		case 2:
-			
+			int toDel;
+			cin >> toDel;
+			deleteArr(toDel);
+			outArr();
+			system("pause");
 			break;
 		case 3:
 			
@@ -152,7 +156,7 @@ void insert()
 	system("pause");
 }
 
-void deleteArr()
+void destroyArr()
 {
 	delete[] arr;
 	arr = nullptr;
@@ -188,6 +192,24 @@ void insertArr(int value, int index)
 		system("pause");
 		insert();
 	}
+}
+
+void deleteArr(int index)
+{
+	int* newArr = new int[arrSize - 1];
+
+	for (int i = 0; i < index; i++)
+	{
+		newArr[i] = arr[i];
+	}
+	for (int i = index+1; i < arrSize; i++)
+	{
+		newArr[i-1] = arr[i];
+	}
+
+	delete[] arr;
+	arrSize--;
+	arr = newArr;
 }
 
 void pushBackArr(int value) 
@@ -291,7 +313,7 @@ int getFillAns() {
 void fillMenu()
 {
 	int answer = getFillAns();
-	if (answer != 3) deleteArr();
+	if (answer != 3) destroyArr();
 
 	switch (answer)
 	{
