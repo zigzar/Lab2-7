@@ -22,15 +22,20 @@ const string dataFile = "data.txt";
 int getAns();
 int getFillAns();
 int getDeleteAns();
+int getGetAns();
 
 void menu();
 void fillMenu();
 void deleteMenu();
+void getMenu();
 
 void insert();
 
+void getByValue();
+void getByIndex();
 void delByValue();
 void delByIndex();
+void getArr(int index);
 void deleteArr(int index);
 void insertArr(int value, int index);
 void pushBackArr(int value);
@@ -105,7 +110,7 @@ void menu() {
 			deleteMenu();
 			break;
 		case 3:
-			
+			getMenu();
 			break;
 		case 4:
 			exit(0);
@@ -127,6 +132,25 @@ void deleteMenu()
 	case 1:
 		delByValue();
 		outArr();
+		system("pause");
+		break;
+	case 2:
+		return;
+		break;
+	}
+}
+
+void getMenu()
+{
+	int answer = getGetAns();
+	switch (answer)
+	{
+	case 0:
+		getByIndex();
+		system("pause");
+		break;
+	case 1:
+		getByValue();
 		system("pause");
 		break;
 	case 2:
@@ -166,6 +190,44 @@ void delByIndex()
 	cout << "Введите индекс: ";
 	cin >> index;
 	deleteArr(index);
+}
+
+void getByValue()
+{
+	int value;
+	int index = -1;
+	cout << "Введите значение: ";
+	cin >> value;
+	for (int i = 0; i < arrSize; i++)
+	{
+		if (arr[i] == value)
+		{
+			index = i;
+			break;
+		}
+	}
+	if (index != -1)
+	{
+		getArr(index);
+	}
+	else
+	{
+		cerr << "Значение не найдено. Попробуйте ввести другое число: ";
+		getByValue();
+	}
+}
+
+void getByIndex()
+{
+	int index;
+	cout << "Введите индекс: ";
+	cin >> index;
+	getArr(index);
+}
+
+void getArr(int index)
+{
+	cout << "Элемент " << arr[index] << " имеет индекс " << index << endl;
 }
 
 void outArr()
@@ -372,6 +434,45 @@ int getDeleteAns()
 	while (true) {
 		system("cls");
 		cout << "Выберите способ удаления элемента:" << endl << endl;
+		choice = (choice + options) % options;
+		if (choice == 0) cout << "-> По индексу" << endl;
+		else  cout << "   По индексу" << endl;
+
+		if (choice == 1) cout << "-> По значению" << endl;
+		else  cout << "   По значению" << endl;
+
+		if (choice == 2) cout << "-> Назад" << endl;
+		else  cout << "   Назад" << endl;
+
+		ch = _getch();
+		if (ch == 224)
+		{
+			ch = _getch();
+			if (ch == 80) choice++;
+			if (ch == 72) choice--;
+		}
+		if (ch == 119)
+		{
+			choice--;
+		}
+		if (ch == 115)
+		{
+			choice++;
+		}
+		if (ch == 13) break;
+	}
+	system("cls");
+	return choice;
+}
+
+int getGetAns()
+{
+	int choice = 0;
+	int options = 3;
+	int ch;
+	while (true) {
+		system("cls");
+		cout << "Выберите способ получения элемента:" << endl << endl;
 		choice = (choice + options) % options;
 		if (choice == 0) cout << "-> По индексу" << endl;
 		else  cout << "   По индексу" << endl;
