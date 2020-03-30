@@ -10,54 +10,66 @@
 
 using namespace std;
 
-struct Node			// Узел списка
+struct Node								// Узел списка
 {
-	int data;		// Данные
-	List* prev;		// Адрес предыдущего узла
-	List* next;		// Адрес следующего узла
+	int data;							// Данные
+	Node* prev;							// Адрес предыдущего узла
+	Node* next;							// Адрес следующего узла
 };
 
-struct List			// Список
+struct List								// Список
 {
-	Node* head;		// Первый элемент списка
-	Node* tail;		// Последний элемент списка
+	Node* head = nullptr;				// Первый элемент списка
+	Node* tail = nullptr;				// Последний элемент списка
+	int size = 0;						// Размер списка
 };
 
-const string dataFile = "data.txt";
+const string dataFile = "data.txt";		// Файл с пользовательскими данными
 
-int getAns();
-int getFillAns();
-int getDeleteAns();
-int getGetAns();
+// МЕНЮ. ГРАФИЧЕСКАЯ ЧАСТЬ //
+int getAns();							// 
+int getFillAns();						// 
+int getDeleteAns();						// 
+int getGetAns();						// 
 
-void menu();
-void fillMenu();
-void deleteMenu();
-void getMenu();
+// МЕНЮ. ЛОГИЧЕСКАЯ ЧАСТЬ //
+void menu(List* list);					// 
+void fillMenu(List* list);				// 
+void deleteMenu();						// 
+void getMenu();							// 
 
-void insert();
+// ОБЩИЕ ДЕЙСТВИЯ //
+void insert();							// 
+void getByValue();						// 
+void getByIndex();						// 
+void delByValue();						// 
+void delByIndex();						// 
 
-void getByValue();
-void getByIndex();
-void delByValue();
-void delByIndex();
-void getArr(int index);
-void deleteArr(int index);
-void insertArr(int value, int index);
-void pushBackArr(int value);
-void outArr();
-void fillArrRand();
-void fillArrMan();
-void fillArrFile();
+// ФУНКЦИИ МАССИВА //
+void getArr(int index);					// 
+void deleteArr(int index);				// 
+void insertArr(int value, int index);	// 
+void pushBackArr(int value);			// 
+void outArr();							// 
+void fillArrRand();						// 
+void fillArrMan();						// 
+void fillFile(List* list);				// 
+
+// ФУНКЦИИ СПИСКА //
+Node* newNode(int data, Node* next = nullptr, Node* prev = nullptr);
+void pushBackList(List* list, int data);
+void outList(List* list);
 
 int* arr = nullptr;
 int arrSize = 0;
-List list;
+
 
 int main()
 {
 	setlocale(LC_ALL, "russian");
-	menu();
+
+	List list;
+	menu(&list);
 }
 
 int getAns() {
@@ -100,14 +112,14 @@ int getAns() {
 	return choice;
 }
 
-void menu() {
+void menu(List* list) {
 	int answer;
 	do {
 		answer = getAns();
 		switch (answer)
 		{
 		case 0:
-			fillMenu();
+			fillMenu(list);
 			break;
 		case 1:
 			insert();
@@ -364,7 +376,7 @@ void fillArrMan()
 	}
 		
 }
-void fillArrFile()
+void fillFile(List* list)
 {
 	ifstream fin;
 	try
@@ -378,6 +390,7 @@ void fillArrFile()
 		while (getline(bufStream, number, ' '))
 		{
 			pushBackArr(stoi(number));
+			pushBackList(list, stoi(number));
 		}
 		fin.close();
 	}
@@ -425,7 +438,6 @@ int getFillAns() {
 		{
 			choice++;
 		}
-		if (ch == 27) menu();
 		if (ch == 13) break;
 	}
 	system("cls");
@@ -510,7 +522,7 @@ int getGetAns()
 	return choice;
 }
 
-void fillMenu()
+void fillMenu(List* list)
 {
 	int answer = getFillAns();
 	if (answer != 3) destroyArr();
@@ -524,15 +536,57 @@ void fillMenu()
 		fillArrMan();
 		break;
 	case 2:
-		fillArrFile();
+		fillFile(list);
 		break;
 	case 3:
 		return;
 		break;
 	}
 
-	cout << "Ваш массив/список: ";
+	cout << "Ваш массив: ";
 	outArr();
 	cout << endl;
+	cout << "Ваш список: ";
+	outList(list);
+	cout << endl;
 	system("pause");
+}
+
+Node* newNode(int data, Node* next, Node* prev)
+{
+	Node* node = new Node;
+	node->data = data;
+	node->next = next;
+	node->prev = prev;
+	return node;
+}
+
+void pushBackList(List* list, int data)
+{
+	if (list->size > 1)
+	{
+		Node* temp = list->tail;
+		list->tail = newNode(data, nullptr, list->tail);
+		temp->next = list->tail;
+	}
+	else if (list->size == 1)
+	{
+		list->tail = newNode(data, nullptr, list->tail);
+		list->head->next = list->tail;
+	}
+	else
+	{
+		list->head = list->tail = newNode(data, list->head, list->tail);
+	}
+}
+
+void outList(List* list)
+{
+	Node* p = list->head;
+	while (p != nullptr)
+	{
+		cout << p->data << " ";
+		p = p->next;
+	}
+	cout << endl;
 }
