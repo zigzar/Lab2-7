@@ -10,11 +10,17 @@
 
 using namespace std;
 
-struct List
+struct Node			// Узел списка
 {
-	int data;
-	List* prev;
-	List* next;
+	int data;		// Данные
+	List* prev;		// Адрес предыдущего узла
+	List* next;		// Адрес следующего узла
+};
+
+struct List			// Список
+{
+	Node* head;		// Первый элемент списка
+	Node* tail;		// Последний элемент списка
 };
 
 const string dataFile = "data.txt";
