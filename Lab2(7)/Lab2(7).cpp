@@ -578,6 +578,7 @@ void pushBackList(List* list, int data)
 	{
 		list->head = list->tail = newNode(data, list->head, list->tail);
 	}
+	list->size++;
 }
 
 void outList(List* list)
