@@ -49,9 +49,11 @@ void delByValue(List* list);			//
 void delByIndex(List* list);			// 
 
 // ФУНКЦИИ МАССИВА //
-void getArr(int index);					// 
+void getArrByIndex(int index);			// 
+void getArrByValue(int value);			//
 void destroyArr();						//
-void deleteArr(int index);				// 
+void deleteArrByIndex(int index);		// 
+void deleteArrByValue(int value);		//
 void insertArr(int value, int index);	// 
 void pushBackArr(int value);			// 
 void outArr();							// 
@@ -59,13 +61,14 @@ void outArr();							//
 // ФУНКЦИИ СПИСКА //
 Node* newNode(int data, Node* next = nullptr, Node* prev = nullptr);
 void getListByIndex(List* list, int index);
+void getListByValue(List* list, int value);
 void destroyList(List* list);
 void pushBackList(List* list, int data);
 void outList(List* list);
 void popFrontList(List* list);
 void pushFrontList(List* list, int data);
 void insertList(List* list, int data, int index);
-void deleteList(List* list, int index);
+void deleteListByIndex(List* list, int index);
 
 int* arr = nullptr;
 int arrSize = 0;
@@ -206,8 +209,8 @@ void delByValue(List* list)
 	}
 	if (index != -1)
 	{
-		deleteArr(index);
-		deleteList(list, index);
+		deleteArrByValue(index);
+		//deleteListByValue(list, index);
 	}
 	else
 	{
@@ -216,13 +219,25 @@ void delByValue(List* list)
 	}
 }
 
+void deleteArrByValue(int value)
+{
+	for (int i = 0; i < arrSize; i++)
+	{
+		if (arr[i] == value)
+		{
+			deleteArrByIndex(i);
+			break;
+		}
+	}
+}
+
 void delByIndex(List* list)
 {
 	int index;
 	cout << "Введите индекс: ";
 	cin >> index;
-	deleteArr(index);
-	deleteList(list, index);
+	deleteArrByIndex(index);
+	deleteListByIndex(list, index);
 }
 
 void getByValue(List* list)
@@ -241,7 +256,8 @@ void getByValue(List* list)
 	}
 	if (index != -1)
 	{
-		getArr(index);
+		getArrByValue(value);
+		getListByValue(list, value);
 	}
 	else
 	{
@@ -250,16 +266,39 @@ void getByValue(List* list)
 	}
 }
 
+void getArrByValue(int value)
+{
+	for (int i = 0; i < arrSize; i++)
+	{
+		if (arr[i] == value)
+		{
+			getArrByIndex(i);
+			break;
+		}
+	}
+}
+
+void getListByValue(List* list, int value)
+{
+	int index = 0;
+	for (Node* p = list->head; p != nullptr; p = p->next, index++)
+	{
+		if (p->data == value) break;
+	}
+
+	cout << "Элемент " << value << " имеет индекс " << index << endl;
+}
+
 void getByIndex(List* list)
 {
 	int index;
 	cout << "Введите индекс: ";
 	cin >> index;
-	getArr(index);
+	getArrByIndex(index);
 	getListByIndex(list, index);
 }
 
-void getArr(int index)
+void getArrByIndex(int index)
 {
 	cout << "Элемент " << arr[index] << " имеет индекс " << index << endl;
 }
@@ -386,7 +425,7 @@ void insertArr(int value, int index)
 	}
 }
 
-void deleteArr(int index)
+void deleteArrByIndex(int index)
 {
 	if (index < 0) index = 0;
 	int* newArr = new int[arrSize - 1];
@@ -709,7 +748,7 @@ void insertList(List* list, int data, int index)
 	}
 }
 
-void deleteList(List* list, int index)
+void deleteListByIndex(List* list, int index)
 {
 	if (index <= 0) popFrontList(list);
 
@@ -752,7 +791,7 @@ void deleteList(List* list, int index)
 
 void getListByIndex(List* list, int index)
 {
-	int number;
+	int number = NULL;
 
 	if (index < 0)
 	{
