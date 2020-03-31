@@ -11,6 +11,8 @@
 
 using namespace std;
 
+HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+
 struct Node														// Узел списка
 {
 	int data;													// Данные
@@ -49,13 +51,15 @@ const string dataFile = "data.txt";								// Файл с пользовател
 
 // МЕНЮ. ГРАФИЧЕСКАЯ ЧАСТЬ //
 int getAns();													// Выбрать пункт в главном меню
+int getAnsLocked();													// Выбрать пункт в главном меню без данных
 int getFillAns();												// Выбрать пункт в меню выбора заполнения массива
 int getDeleteAns();												// Выбрать пункт в меню выбора удаления элемента
 int getGetAns();												// Выбрать пункт в меню выбора получения элемента
 
 // МЕНЮ. ЛОГИЧЕСКАЯ ЧАСТЬ //
 void menu(List* list, int*& arr, int& arrSize);					// Главное меню
-void fillMenu(List* list, int*& arr, int& arrSize);				// Меню заполнения массива
+void menuLocked(List* list, int*& arr, int& arrSize);			// Главное меню без данных
+bool fillMenu(List* list, int*& arr, int& arrSize);				// Меню заполнения массива
 void deleteMenu(List* list, int*& arr, int& arrSize);			// Меню удаления элемента
 void getMenu(List* list, int*& arr, int& arrSize);				// Меню получения элемента
 
@@ -110,6 +114,7 @@ int main()
 	int* arr = nullptr;											// Массив
 	int arrSize = 0;											// Размер массива
 	List list;													// Список
+	menuLocked(&list, arr, arrSize);
 	menu(&list, arr, arrSize);
 }
 
@@ -188,6 +193,62 @@ void menu(List* list, int*& arr, int& arrSize) {
 			break;
 		}
 	} while (true);
+}
+
+int getAnsLocked() {
+	int choice = 0;
+	int options = 2;
+	int ch;
+	while (true) {
+		system("cls");
+		choice = (choice + options) % options;
+		cout << "Вверх/w и " << "вниз/s для перемещения" << endl;
+		cout << "Enter для выбора" << endl << endl;
+
+		if (choice == 0) cout << "-> Создать массив/список" << endl;
+		else  cout << "   Создать массив/список" << endl;
+
+		SetConsoleTextAttribute(h, (WORD)((0 << 4) | 8));
+		cout << "   Добавить элемент" << endl;
+		cout << "   Удалить элемент" << endl;
+		cout << "   Получить элемент" << endl;
+		cout << "   Задание по варианту" << endl;
+		cout << "   Таблица времени" << endl;
+		SetConsoleTextAttribute(h, (WORD)((0 << 4) | 15));
+
+		if (choice == 1) cout << "-> Выход" << endl;
+		else  cout << "   Выход" << endl;
+
+		ch = _getch();
+		if (ch == 224)
+		{
+			ch = _getch();
+			if (ch == 80) choice++;
+			if (ch == 72) choice--;
+		}
+		if (ch == 119) choice--;
+		if (ch == 115) choice++;
+		if (ch == 13) break;
+	}
+	system("cls");
+	return choice;
+}
+
+void menuLocked(List* list, int*& arr, int& arrSize) {
+	int answer;
+	bool showLockedMenu = false;
+	do {
+		answer = getAnsLocked();
+		switch (answer)
+		{
+		case 0:
+			showLockedMenu = fillMenu(list, arr, arrSize);
+			break;
+		case 1:
+			exit(0);
+			break;
+		}
+	} while (showLockedMenu);
 }
 
 void deleteMenu(List* list, int*& arr, int& arrSize)
@@ -789,7 +850,7 @@ int getGetAns()
 	return choice;
 }
 
-void fillMenu(List* list, int*& arr, int& arrSize)
+bool fillMenu(List* list, int*& arr, int& arrSize)
 {
 	int answer = getFillAns();
 	if (answer != 3)
@@ -810,7 +871,7 @@ void fillMenu(List* list, int*& arr, int& arrSize)
 		fillFile(list, arr, arrSize);
 		break;
 	case 3:
-		return;
+		return true;
 		break;
 	}
 
@@ -820,6 +881,7 @@ void fillMenu(List* list, int*& arr, int& arrSize)
 	outList(list);
 	cout << endl;
 	system("pause");
+	return false;
 }
 
 Node* newNode(int data, Node* next, Node* prev)
