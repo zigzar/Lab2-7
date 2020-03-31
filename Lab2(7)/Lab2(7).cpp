@@ -51,7 +51,7 @@ void deleteArr(int index);				//
 void insertArr(int value, int index);	// 
 void pushBackArr(int value);			// 
 void outArr();							// 
-void fillArrRand();						// 
+void fillRand(List* list);						// 
 void fillMan(List* list);				// 
 void fillFile(List* list);				// 
 
@@ -258,14 +258,16 @@ void outArr()
 	}
 	cout << endl;
 }
-void fillArrRand()
+void fillRand(List* list)
 {
-	cout << "Введите размерность массива" << endl;
+	cout << "Введите размерность массива/списка: ";
 	arrSize = inputCheck();
 	arr = new int[arrSize];
-	for (int i = 0; i < arrSize; i++)
+	for (int temp, i = 0; i < arrSize; i++)
 	{
-		arr[i] = rand() % 100;
+		 temp = rand() % 100;
+		 arr[i] = temp;
+		 pushBackList(list, temp);
 	}
 }
 
@@ -535,7 +537,7 @@ void fillMenu(List* list)
 	switch (answer)
 	{
 	case 0:
-		fillArrRand();
+		fillRand(list);
 		break;
 	case 1:
 		fillMan(list);
@@ -550,7 +552,6 @@ void fillMenu(List* list)
 
 	cout << "Ваш массив: ";
 	outArr();
-	cout << endl;
 	cout << "Ваш список: ";
 	outList(list);
 	cout << endl;
