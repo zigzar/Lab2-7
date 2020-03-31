@@ -365,12 +365,14 @@ void showTable()
 	cout << setw(100) << "Таблица времени выполнения действий над массивом и списком. Все данные указаны в с\n"
 	<< setw(100) << "________________________________________________________________________________________________________________________\n";
 	cout << setw(50) << "Массив" << setw(50) << "Список\n";
-	cout << "Время создания\t\t\t\t" << setw(9) << timeTable.ArrCtn / 900000 << setw(49) << timeTable.ListCtn / 900000 << "\n";
-	cout << "Время вставки элемента\t\t\t" << setw(9) << timeTable.ArrIns / 900000 << setw(49) << timeTable.ListIns / 900000 << "\n";
-	cout << "Время удаления элемента по значению\t" << setw(9) << timeTable.ArrDelVal / 900000 << setw(49) << timeTable.ListDelVal / 900000 << "\n";
-	cout << "Время удаления элемента по индексу\t" << setw(9) << timeTable.ArrDelInd / 900000 << setw(49) << timeTable.ListDelInd / 900000 << "\n";
-	cout << "Время получения элемента по значению\t" << setw(9) << timeTable.ArrGetVal / 900000 << setw(49) << timeTable.ListGetVal / 900000 << "\n";
-	cout << "Время получения элемента по индексу\t" << setw(9) << timeTable.ArrGetInd / 900000 << setw(49) << timeTable.ListGetInd / 900000 << "\n";
+	cout << "Время создания\t\t\t\t" << setw(9) << timeTable.ArrCtn / 1000000 << setw(49) << timeTable.ListCtn / 1000000 << "\n";
+	cout << "Время вставки элемента\t\t\t" << setw(9) << timeTable.ArrIns / 1000000 << setw(49) << timeTable.ListIns / 1000000 << "\n";
+	cout << "Время удаления элемента по значению\t" << setw(9) << timeTable.ArrDelVal / 1000000 << setw(49) << timeTable.ListDelVal / 1000000 << "\n";
+	cout << "Время удаления элемента по индексу\t" << setw(9) << timeTable.ArrDelInd / 1000000 << setw(49) << timeTable.ListDelInd / 1000000 << "\n";
+	cout << "Время получения элемента по значению\t" << setw(9) << timeTable.ArrGetVal / 1000000 << setw(49) << timeTable.ListGetVal / 1000000 << "\n";
+	cout << "Время получения элемента по индексу\t" << setw(9) << timeTable.ArrGetInd / 1000000 << setw(49) << timeTable.ListGetInd / 1000000 << "\n";
+	cout << "Время уменьшения четных элементов\t" << setw(9) << timeTable.ArrOdd / 1000000 << setw(49) << timeTable.ListOdd / 1000000 << "\n";
+	cout << "Время умножения нечетных элементов\t" << setw(9) << timeTable.ArrEven / 1000000 << setw(49) << timeTable.ListEven / 1000000 << "\n";
 	cout << "\n\n";
 	system("pause");
 }
