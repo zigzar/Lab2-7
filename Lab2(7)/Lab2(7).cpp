@@ -10,77 +10,75 @@
 
 using namespace std;
 
-struct Node								// Узел списка
+struct Node														// Узел списка
 {
-	int data;							// Данные
-	Node* prev;							// Адрес предыдущего узла
-	Node* next;							// Адрес следующего узла
+	int data;													// Данные
+	Node* prev;													// Адрес предыдущего узла
+	Node* next;													// Адрес следующего узла
 };
 
-struct List								// Список
+struct List														// Список
 {
-	Node* head = nullptr;				// Первый элемент списка
-	Node* tail = nullptr;				// Последний элемент списка
-	int size = 0;						// Размер списка
+	Node* head = nullptr;										// Первый элемент списка
+	Node* tail = nullptr;										// Последний элемент списка
+	int size = 0;												// Размер списка
 };
 
-const string dataFile = "data.txt";		// Файл с пользовательскими данными
+const string dataFile = "data.txt";								// Файл с пользовательскими данными
 
 // МЕНЮ. ГРАФИЧЕСКАЯ ЧАСТЬ //
-int getAns();							// 
-int getFillAns();						// 
-int getDeleteAns();						// 
-int getGetAns();						// 
+int getAns();													// Выбрать пункт в главном меню
+int getFillAns();												// Выбрать пункт в меню выбора заполнения массива
+int getDeleteAns();												// Выбрать пункт в меню выбора удаления элемента
+int getGetAns();												// Выбрать пункт в меню выбора получения элемента
 
 // МЕНЮ. ЛОГИЧЕСКАЯ ЧАСТЬ //
-void menu(List* list);					// 
-void fillMenu(List* list);				// 
-void deleteMenu(List* list);			// 
-void getMenu(List* list);				// 
+void menu(List* list, int*& arr, int& arrSize);					// Главное меню
+void fillMenu(List* list, int*& arr, int& arrSize);				// Меню заполнения массива
+void deleteMenu(List* list, int*& arr, int& arrSize);			// Меню удаления элемента
+void getMenu(List* list, int*& arr, int& arrSize);				// Меню получения элемента
 
 // ОБЩИЕ ДЕЙСТВИЯ //
-void fillRand(List* list);				// 
-void fillMan(List* list);				// 
-void fillFile(List* list);				//
-void insert(List* list);				// 
-void getByValue(List* list);			// 
-void getByIndex(List* list);			// 
-void delByValue(List* list);			// 
-void delByIndex(List* list);			// 
+void fillRand(List* list, int*& arr, int& arrSize);				// Заполнить случайными числами
+void fillMan(List* list, int*& arr, int& arrSize);				// Заполнить вручную
+void fillFile(List* list, int*& arr, int& arrSize);				// Заполнить числами из файла
+void insert(List* list, int*& arr, int& arrSize);				// Вставить значение
+void getByValue(List* list, int*& arr, int& arrSize);			// Получить элемент по значению
+void getByIndex(List* list, int*& arr, int& arrSize);			// Получить элемент по индексу
+void delByValue(List* list, int*& arr, int& arrSize);			// Удалить элемент по значению
+void delByIndex(List* list, int*& arr, int& arrSize);			// Удалить элемент по индексу
 
 // ФУНКЦИИ МАССИВА //
-void getArrByIndex(int index);			// 
-void getArrByValue(int value);			//
-void destroyArr();						//
-void deleteArrByIndex(int index);		// 
-void deleteArrByValue(int value);		//
-void insertArr(int value, int index);	// 
-void pushBackArr(int value);			// 
-void outArr();							// 
+void outArr(int*& arr, int& arrSize);							// Вывести массив в консоль
+void destroyArr(int*& arr, int& arrSize);						// Удалить массив
+void pushBackArr(int value, int*& arr, int& arrSize);			// Добавить элемент в конец массива
+void insertArr(int value, int index, int*& arr, int& arrSize);	// Вставить элемент в массив
+void deleteArrByIndex(int index, int*& arr, int& arrSize);		// Удалить элемент массива по индексу
+void deleteArrByValue(int value, int*& arr, int& arrSize);		// Удалить элемент массива по значению
+void getArrByIndex(int index, int*& arr, int& arrSize);			// Получить элемент массива по индексу
+void getArrByValue(int value, int*& arr, int& arrSize);			// Получить элемент массива по значению
 
 // ФУНКЦИИ СПИСКА //
-Node* newNode(int data, Node* next = nullptr, Node* prev = nullptr);
-void getListByIndex(List* list, int index);
-void getListByValue(List* list, int value);
-void destroyList(List* list);
-void pushBackList(List* list, int data);
-void outList(List* list);
-void popFrontList(List* list);
-void pushFrontList(List* list, int data);
-void insertList(List* list, int data, int index);
-void deleteListByIndex(List* list, int index);
-void deleteListByValue(List* list, int value);
-
-int* arr = nullptr;
-int arrSize = 0;
-
+Node* newNode(int data, Node* next, Node* prev);				// Создать новый узел списка
+void outList(List* list);										// Вывести список в консоль
+void destroyList(List* list);									// Удалить список
+void pushBackList(List* list, int data);						// Добавить элемент в конец списка
+void pushFrontList(List* list, int data);						// Добавить элемент в начало списка
+void popBackList(List* list);									// Удалить элемент из конца списка
+void popFrontList(List* list);									// Удалить элемент из начала списка
+void insertList(List* list, int data, int index);				// Вставить элемент в список
+void deleteListByIndex(List* list, int index);					// Удалить элемент списка по индексу
+void deleteListByValue(List* list, int value);					// Удалить элемент списка по значению
+void getListByIndex(List* list, int index);						// Получить элемент массива по индексу
+void getListByValue(List* list, int value);						// Получить элемент массива по значению
 
 int main()
 {
 	setlocale(LC_ALL, "russian");
-
-	List list;
-	menu(&list);
+	int* arr = nullptr;											// Массив
+	int arrSize = 0;											// Размер массива
+	List list;													// Список
+	menu(&list, arr, arrSize);
 }
 
 int getAns() {
@@ -123,23 +121,23 @@ int getAns() {
 	return choice;
 }
 
-void menu(List* list) {
+void menu(List* list, int*& arr, int& arrSize) {
 	int answer;
 	do {
 		answer = getAns();
 		switch (answer)
 		{
 		case 0:
-			fillMenu(list);
+			fillMenu(list, arr, arrSize);
 			break;
 		case 1:
-			insert(list);
+			insert(list, arr, arrSize);
 			break;
 		case 2:
-			deleteMenu(list);
+			deleteMenu(list, arr, arrSize);
 			break;
 		case 3:
-			getMenu(list);
+			getMenu(list, arr, arrSize);
 			break;
 		case 4:
 			exit(0);
@@ -148,23 +146,23 @@ void menu(List* list) {
 	} while (true);
 }
 
-void deleteMenu(List* list)
+void deleteMenu(List* list, int*& arr, int& arrSize)
 {
 	int answer = getDeleteAns();
 	switch (answer)
 	{
 	case 0:
-		delByIndex(list);
+		delByIndex(list, arr, arrSize);
 		cout << "Массив после изменений:" << endl;
-		outArr();
+		outArr(arr, arrSize);
 		cout << "Список после изменений:" << endl;
 		outList(list);
 		system("pause");
 		break;
 	case 1:
-		delByValue(list);
+		delByValue(list, arr, arrSize);
 		cout << "Массив после изменений:" << endl;
-		outArr();
+		outArr(arr, arrSize);
 		cout << "Список после изменений:" << endl;
 		outList(list);
 		system("pause");
@@ -175,17 +173,17 @@ void deleteMenu(List* list)
 	}
 }
 
-void getMenu(List* list)
+void getMenu(List* list, int*& arr, int& arrSize)
 {
 	int answer = getGetAns();
 	switch (answer)
 	{
 	case 0:
-		getByIndex(list);
+		getByIndex(list, arr, arrSize);
 		system("pause");
 		break;
 	case 1:
-		getByValue(list);
+		getByValue(list, arr, arrSize);
 		system("pause");
 		break;
 	case 2:
@@ -194,7 +192,7 @@ void getMenu(List* list)
 	}
 }
 
-void delByValue(List* list)
+void delByValue(List* list, int*& arr, int& arrSize)
 {
 	int value;
 	int index = -1;
@@ -210,39 +208,38 @@ void delByValue(List* list)
 	}
 	if (index != -1)
 	{
-		deleteArrByValue(value);
-		deleteListByValue(list, value
-		);
+		deleteArrByValue(value, arr, arrSize);
+		deleteListByValue(list, value);
 	}
 	else
 	{
 		cerr << "Значение не найдено. Попробуйте ввести другое число." << endl;
-		delByValue(list);
+		delByValue(list, arr, arrSize);
 	}
 }
 
-void deleteArrByValue(int value)
+void deleteArrByValue(int value, int*& arr, int& arrSize)
 {
 	for (int i = 0; i < arrSize; i++)
 	{
 		if (arr[i] == value)
 		{
-			deleteArrByIndex(i);
+			deleteArrByIndex(i, arr, arrSize);
 			break;
 		}
 	}
 }
 
-void delByIndex(List* list)
+void delByIndex(List* list, int*& arr, int& arrSize)
 {
 	int index;
 	cout << "Введите индекс: ";
 	cin >> index;
-	deleteArrByIndex(index);
+	deleteArrByIndex(index, arr, arrSize);
 	deleteListByIndex(list, index);
 }
 
-void getByValue(List* list)
+void getByValue(List* list, int*& arr, int& arrSize)
 {
 	int value;
 	int index = -1;
@@ -258,23 +255,23 @@ void getByValue(List* list)
 	}
 	if (index != -1)
 	{
-		getArrByValue(value);
+		getArrByValue(value, arr, arrSize);
 		getListByValue(list, value);
 	}
 	else
 	{
-		cerr << "Значение не найдено. Попробуйте ввести другое число: ";
-		getByValue(list);
+		cerr << "Значение не найдено. Попробуйте ввести другое число." << endl;
+		getByValue(list, arr, arrSize);
 	}
 }
 
-void getArrByValue(int value)
+void getArrByValue(int value, int*& arr, int& arrSize)
 {
 	for (int i = 0; i < arrSize; i++)
 	{
 		if (arr[i] == value)
 		{
-			getArrByIndex(i);
+			getArrByIndex(i, arr, arrSize);
 			break;
 		}
 	}
@@ -291,21 +288,21 @@ void getListByValue(List* list, int value)
 	cout << "Элемент " << value << " имеет индекс " << index << endl;
 }
 
-void getByIndex(List* list)
+void getByIndex(List* list, int*& arr, int& arrSize)
 {
 	int index;
 	cout << "Введите индекс: ";
 	cin >> index;
-	getArrByIndex(index);
+	getArrByIndex(index, arr, arrSize);
 	getListByIndex(list, index);
 }
 
-void getArrByIndex(int index)
+void getArrByIndex(int index, int*& arr, int& arrSize)
 {
 	cout << "Элемент " << arr[index] << " имеет индекс " << index << endl;
 }
 
-void outArr()
+void outArr(int*& arr, int& arrSize)
 {
 	for (int i = 0; i < arrSize; i++)
 	{
@@ -314,7 +311,7 @@ void outArr()
 	cout << endl;
 }
 
-void fillRand(List* list)
+void fillRand(List* list, int*& arr, int& arrSize)
 {
 	cout << "Введите размерность массива/списка: ";
 	arrSize = inputCheck();
@@ -327,7 +324,7 @@ void fillRand(List* list)
 	}
 }
 
-void fillMan(List* list)
+void fillMan(List* list, int*& arr, int& arrSize)
 {
 	cout << "Введите значения через пробел и нажмите Enter:" << endl;
 	string buffer;
@@ -338,13 +335,13 @@ void fillMan(List* list)
 	cin.clear();
 	while (getline(bufStream, number, ' '))
 	{
-		pushBackArr(stoi(number));
+		pushBackArr(stoi(number), arr, arrSize);
 		pushBackList(list, stoi(number));
 	}
 
 }
 
-void fillFile(List* list)
+void fillFile(List* list, int*& arr, int& arrSize)
 {
 	ifstream fin;
 	try
@@ -357,7 +354,7 @@ void fillFile(List* list)
 		bufStream << buffer;
 		while (getline(bufStream, number, ' '))
 		{
-			pushBackArr(stoi(number));
+			pushBackArr(stoi(number), arr, arrSize);
 			pushBackList(list, stoi(number));
 		}
 		fin.close();
@@ -371,7 +368,7 @@ void fillFile(List* list)
 	}
 }
 
-void insert(List* list)
+void insert(List* list, int*& arr, int& arrSize)
 {
 	int value;
 	int index;
@@ -384,29 +381,29 @@ void insert(List* list)
 	index = inputCheck();
 	cout << endl << endl;
 
-	insertArr(value, index);
+	insertArr(value, index, arr, arrSize);
 	insertList(list, value, index);
 
 	cout << "Массив после изменений:" << endl;
-	outArr();
+	outArr(arr, arrSize);
 	cout << "Список после изменений:" << endl;
 	outList(list);
 	system("pause");
 }
 
-void destroyArr()
+void destroyArr(int*& arr, int& arrSize)
 {
 	delete[] arr;
 	arr = nullptr;
 	arrSize = 0;
 }
 
-void insertArr(int value, int index)
+void insertArr(int value, int index, int*& arr, int& arrSize)
 {
 	if (index < 0) index = 0;
 	if (index >= arrSize)
 	{
-		pushBackArr(value);
+		pushBackArr(value, arr, arrSize);
 	} 
 	else 
 	{
@@ -427,7 +424,7 @@ void insertArr(int value, int index)
 	}
 }
 
-void deleteArrByIndex(int index)
+void deleteArrByIndex(int index, int*& arr, int& arrSize)
 {
 	if (index < 0) index = 0;
 	int* newArr = new int[arrSize - 1];
@@ -447,7 +444,7 @@ void deleteArrByIndex(int index)
 	arr = newArr;
 }
 
-void pushBackArr(int value) 
+void pushBackArr(int value, int*& arr, int& arrSize)
 {
 	int* newArr = new int[arrSize + 1];
 
@@ -581,25 +578,25 @@ int getGetAns()
 	return choice;
 }
 
-void fillMenu(List* list)
+void fillMenu(List* list, int*& arr, int& arrSize)
 {
 	int answer = getFillAns();
 	if (answer != 3)
 	{
-		destroyArr();
+		destroyArr(arr, arrSize);
 		destroyList(list);
 	}
 
 	switch (answer)
 	{
 	case 0:
-		fillRand(list);
+		fillRand(list, arr, arrSize);
 		break;
 	case 1:
-		fillMan(list);
+		fillMan(list, arr, arrSize);
 		break;
 	case 2:
-		fillFile(list);
+		fillFile(list, arr, arrSize);
 		break;
 	case 3:
 		return;
@@ -607,7 +604,7 @@ void fillMenu(List* list)
 	}
 
 	cout << "Ваш массив: ";
-	outArr();
+	outArr(arr, arrSize);
 	cout << "Ваш список: ";
 	outList(list);
 	cout << endl;
