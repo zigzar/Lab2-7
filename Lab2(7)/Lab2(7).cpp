@@ -52,13 +52,15 @@ void insertArr(int value, int index);	//
 void pushBackArr(int value);			// 
 void outArr();							// 
 void fillArrRand();						// 
-void fillArrMan();						// 
+void fillMan(List* list);				// 
 void fillFile(List* list);				// 
 
 // ФУНКЦИИ СПИСКА //
 Node* newNode(int data, Node* next = nullptr, Node* prev = nullptr);
+void destroyList(List* list);
 void pushBackList(List* list, int data);
 void outList(List* list);
+void popFrontList(List* list);
 
 int* arr = nullptr;
 int arrSize = 0;
@@ -259,9 +261,7 @@ void outArr()
 void fillArrRand()
 {
 	cout << "Введите размерность массива" << endl;
-	cin >> arrSize;
-	cin.clear();
-	cin.ignore(cin.rdbuf()->in_avail());
+	arrSize = inputCheck();
 	arr = new int[arrSize];
 	for (int i = 0; i < arrSize; i++)
 	{
@@ -361,7 +361,7 @@ void pushBackArr(int value)
 	arr = newArr;
 }
 
-void fillArrMan()
+void fillMan(List* list)
 {
 	cout << "Введите значения через пробел и нажмите Enter:" << endl;
 	string buffer;
@@ -373,6 +373,7 @@ void fillArrMan()
 	while (getline(bufStream, number, ' '))
 	{
 		pushBackArr(stoi(number));
+		pushBackList(list, stoi(number));
 	}
 		
 }
@@ -525,7 +526,11 @@ int getGetAns()
 void fillMenu(List* list)
 {
 	int answer = getFillAns();
-	if (answer != 3) destroyArr();
+	if (answer != 3)
+	{
+		destroyArr();
+		destroyList(list);
+	}
 
 	switch (answer)
 	{
@@ -533,7 +538,7 @@ void fillMenu(List* list)
 		fillArrRand();
 		break;
 	case 1:
-		fillArrMan();
+		fillMan(list);
 		break;
 	case 2:
 		fillFile(list);
@@ -561,6 +566,14 @@ Node* newNode(int data, Node* next, Node* prev)
 	return node;
 }
 
+void destroyList(List* list)
+{
+	while (list->size)
+	{
+		popFrontList(list);
+	}
+}
+
 void pushBackList(List* list, int data)
 {
 	if (list->size > 1)
@@ -579,6 +592,24 @@ void pushBackList(List* list, int data)
 		list->head = list->tail = newNode(data, list->head, list->tail);
 	}
 	list->size++;
+}
+
+void popFrontList(List* list)
+{
+	if (list->size > 1)
+	{
+		Node* temp = list->head;
+		list->head = list->head->next;
+		delete temp;
+	}
+	else if (list->size == 1)
+	{
+		Node* temp = list->head;
+		list->tail = list->head = list->head->next;
+		delete temp;
+	}
+
+	list->size--;
 }
 
 void outList(List* list)
