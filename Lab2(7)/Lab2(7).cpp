@@ -209,7 +209,7 @@ void delByValue(List* list)
 	}
 	if (index != -1)
 	{
-		deleteArrByValue(index);
+		deleteArrByValue(value);
 		//deleteListByValue(list, index);
 	}
 	else
