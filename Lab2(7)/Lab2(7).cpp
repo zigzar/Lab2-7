@@ -75,6 +75,7 @@ void getListByValue(List* list, int value);						// Получить элеме�
 int main()
 {
 	setlocale(LC_ALL, "russian");
+	srand(time(NULL));
 	int* arr = nullptr;											// Массив
 	int arrSize = 0;											// Размер массива
 	List list;													// Список
