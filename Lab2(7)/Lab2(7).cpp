@@ -444,6 +444,7 @@ void fillFile(List* list, int*& arr, int& arrSize)
 	try
 	{
 		fin.open(dataFile);
+		if (!fin.is_open()) throw invalid_argument("Файл не существует");
 		string buffer;
 		string number;
 		stringstream bufStream;
@@ -463,7 +464,7 @@ void fillFile(List* list, int*& arr, int& arrSize)
 		}
 		fin.close();
 	}
-	catch (const exception&)
+	catch (const invalid_argument&)
 	{
 		cout << "Ошибка открытия файла" << endl;
 		ofstream fout;
