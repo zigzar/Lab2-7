@@ -206,6 +206,7 @@ void delByValue(List* list)
 	if (index != -1)
 	{
 		deleteArr(index);
+		deleteList(list, index);
 	}
 	else
 	{
@@ -703,6 +704,47 @@ void insertList(List* list, int data, int index)
 		previous->next = node;
 
 		list->size++;
+	}
+}
+
+void deleteList(List* list, int index)
+{
+	if (index <= 0) popFrontList(list);
+
+	else if (index >= list->size-1) popBackList(list);
+
+	else if (index <= list->size / 2)
+	{
+		Node* previous = list->head;
+		for (int i = 0; i < index - 1; i++)
+		{
+			previous = previous->next;
+		}
+
+		Node* toDelete = previous->next;
+		previous->next = toDelete->next;
+		Node* next = toDelete->next;
+		delete toDelete;
+		next->prev = previous;
+
+		list->size--;
+	}
+
+	else if (index > list->size / 2)
+	{
+		Node* next = list->tail;
+		for (int i = list->size - 1; index < i; i--)
+		{
+			next = next->prev;
+		}
+
+		Node* toDelete = next->prev;
+		next->prev = toDelete->prev;
+		Node* previous = toDelete->prev;
+		delete toDelete;
+		previous->next = next;
+
+		list->size--;
 	}
 }
 
