@@ -35,7 +35,7 @@ int getGetAns();						//
 // МЕНЮ. ЛОГИЧЕСКАЯ ЧАСТЬ //
 void menu(List* list);					// 
 void fillMenu(List* list);				// 
-void deleteMenu();						// 
+void deleteMenu(List* list);			// 
 void getMenu();							// 
 
 // ОБЩИЕ ДЕЙСТВИЯ //
@@ -43,10 +43,10 @@ void fillRand(List* list);				//
 void fillMan(List* list);				// 
 void fillFile(List* list);				//
 void insert(List* list);				// 
-void getByValue();						// 
+void getByValue();			// 
 void getByIndex();						// 
-void delByValue();						// 
-void delByIndex();						// 
+void delByValue(List* list);						// 
+void delByIndex(List* list);			// 
 
 // ФУНКЦИИ МАССИВА //
 void getArr(int index);					// 
@@ -64,6 +64,7 @@ void outList(List* list);
 void popFrontList(List* list);
 void pushFrontList(List* list, int data);
 void insertList(List* list, int data, int index);
+void deleteList(List* list, int index);
 
 int* arr = nullptr;
 int arrSize = 0;
@@ -130,7 +131,7 @@ void menu(List* list) {
 			insert(list);
 			break;
 		case 2:
-			deleteMenu();
+			deleteMenu(list);
 			break;
 		case 3:
 			getMenu();
@@ -142,19 +143,25 @@ void menu(List* list) {
 	} while (true);
 }
 
-void deleteMenu()
+void deleteMenu(List* list)
 {
 	int answer = getDeleteAns();
 	switch (answer)
 	{
 	case 0:
-		delByIndex();
+		delByIndex(list);
+		cout << "Массив после изменений:" << endl;
 		outArr();
+		cout << "Список после изменений:" << endl;
+		outList(list);
 		system("pause");
 		break;
 	case 1:
-		delByValue();
+		delByValue(list);
+		cout << "Массив после изменений:" << endl;
 		outArr();
+		cout << "Список после изменений:" << endl;
+		outList(list);
 		system("pause");
 		break;
 	case 2:
@@ -182,7 +189,7 @@ void getMenu()
 	}
 }
 
-void delByValue()
+void delByValue(List* list)
 {
 	int value;
 	int index = -1;
@@ -203,16 +210,17 @@ void delByValue()
 	else
 	{
 		cerr << "Значение не найдено. Попробуйте ввести другое число: ";
-		delByValue();
+		delByValue(list);
 	}
 }
 
-void delByIndex()
+void delByIndex(List* list)
 {
 	int index;
 	cout << "Введите индекс: ";
 	cin >> index;
 	deleteArr(index);
+	deleteList(list, index);
 }
 
 void getByValue()
@@ -377,9 +385,10 @@ void insertArr(int value, int index)
 
 void deleteArr(int index)
 {
+	if (index < 0) index = 0;
 	int* newArr = new int[arrSize - 1];
 
-	if (index > arrSize) index = arrSize;
+	if (index >= arrSize) index = arrSize-1;
 	for (int i = 0; i < index; i++)
 	{
 		newArr[i] = arr[i];
@@ -618,12 +627,32 @@ void pushFrontList(List* list, int data)
 	list->size++;
 }
 
+void popBackList(List* list)
+{
+	if (list->size > 1)
+	{
+		Node* temp = list->tail;
+		list->tail = list->tail->prev;
+		list->tail->next = nullptr;
+		delete temp;
+	}
+	else if (list->size == 1)
+	{
+		Node* temp = list->tail;
+		list->tail = list->head = list->tail->prev;
+		delete temp;
+	}
+
+	list->size--;
+}
+
 void popFrontList(List* list)
 {
 	if (list->size > 1)
 	{
 		Node* temp = list->head;
 		list->head = list->head->next;
+		list->head->prev = nullptr;
 		delete temp;
 	}
 	else if (list->size == 1)
@@ -674,6 +703,47 @@ void insertList(List* list, int data, int index)
 		previous->next = node;
 
 		list->size++;
+	}
+}
+
+void deleteList(List* list, int index)
+{
+	if (index <= 0) popFrontList(list);
+
+	else if (index >= list->size-1) popBackList(list);
+
+	else if (index <= list->size / 2)
+	{
+		Node* previous = list->head;
+		for (int i = 0; i < index - 1; i++)
+		{
+			previous = previous->next;
+		}
+
+		Node* toDelete = previous->next;
+		previous->next = toDelete->next;
+		Node* next = toDelete->next;
+		delete toDelete;
+		next->prev = previous;
+
+		list->size--;
+	}
+
+	else if (index > list->size / 2)
+	{
+		Node* next = list->tail;
+		for (int i = list->size - 1; index < i; i--)
+		{
+			next = next->prev;
+		}
+
+		Node* toDelete = next->prev;
+		next->prev = toDelete->prev;
+		Node* previous = toDelete->prev;
+		delete toDelete;
+		previous->next = next;
+
+		list->size--;
 	}
 }
 
