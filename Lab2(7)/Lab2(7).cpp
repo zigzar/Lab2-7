@@ -33,12 +33,16 @@ struct Table													// Таблица времени
 	float ArrDelInd;											// Время удаления элемента из массива по индексу
 	float ArrGetVal;											// Время получения элемента из массива значению
 	float ArrGetInd;											// Время получения элемента из массива индексу
+	float ArrOdd;												// Время уменьшения каждого четного элемента массива на число
+	float ArrEven;												// Время умножения каждого нечетного элемента массива на величину от 1 до 5
 	float ListCtn;												// Время создания списка
 	float ListIns;												// Время вставки элемента в список
 	float ListDelVal;											// Время удаления элемента из списка по значению
 	float ListDelInd;											// Время удаления элемента из списка по индексу
 	float ListGetVal;											// Время получения элемента из списка по значению
 	float ListGetInd;											// Время получения элемента из списка по индексу
+	float ListOdd;												// Время уменьшения каждого четного элемента списка на число
+	float ListEven;												// Время умножения каждого нечетного элемента списка на величину от 1 до 5
 };
 
 const string dataFile = "data.txt";								// Файл с пользовательскими данными
@@ -90,6 +94,13 @@ void deleteListByValue(List* list, int value);					// Удалить элеме�
 void getListByIndex(List* list, int index);						// Получить элемент массива по индексу
 void getListByValue(List* list, int value);						// Получить элемент массива по значению
 
+// ЗАДАНИЕ ПО ВАРИАНТУ //
+void task(List* list, int*& arr, int& arrSize);					// Выполнить задание
+void arrOdd(int number, int*& arr, int& arrSize);				// Уменьшить каждый четный элемент массива на пользовательское число
+void arrEven(int number, int*& arr, int& arrSize);				// Умножить каждый нечетный элемент массива на случайное число
+void listOdd(List* list, int number);							// Уменьшить каждый четный элемент списка на пользовательское число
+void listEven(List* list, int number);							// Умножить каждый нечетный элемент списка на случайное число
+
 Table timeTable;												// Таблица времени
 
 int main()
@@ -104,7 +115,7 @@ int main()
 
 int getAns() {
 	int choice = 0;
-	int options = 6;
+	int options = 7;
 	int ch;
 	while (true) {
 		system("cls");
@@ -124,10 +135,13 @@ int getAns() {
 		if (choice == 3) cout << "-> Получить элемент" << endl;
 		else  cout << "   Получить элемент" << endl;
 
-		if (choice == 4) cout << "-> Таблица времени" << endl;
+		if (choice == 4) cout << "-> Задание по варианту" << endl;
+		else  cout << "   Задание по варианту" << endl;		
+		
+		if (choice == 5) cout << "-> Таблица времени" << endl;
 		else  cout << "   Таблица времени" << endl;
 
-		if (choice == 5) cout << "-> Выход" << endl;
+		if (choice == 6) cout << "-> Выход" << endl;
 		else  cout << "   Выход" << endl;
 
 		ch = _getch();
@@ -164,9 +178,12 @@ void menu(List* list, int*& arr, int& arrSize) {
 			getMenu(list, arr, arrSize);
 			break;
 		case 4:
-			showTable();
+			task(list, arr, arrSize);
 			break;
 		case 5:
+			showTable();
+			break;
+		case 6:
 			exit(0);
 			break;
 		}
@@ -294,6 +311,86 @@ void showTable()
 	cout << "Время получения элемента по значению\t" << setw(9) << timeTable.ArrGetVal / 900000 << setw(49) << timeTable.ListGetVal / 900000 << "\n";
 	cout << "Время получения элемента по индексу\t" << setw(9) << timeTable.ArrGetInd / 900000 << setw(49) << timeTable.ListGetInd / 900000 << "\n";
 	cout << "\n\n";
+	system("pause");
+}
+
+void arrOdd(int number, int*& arr, int& arrSize)
+{
+	for (int i = 0; i < arrSize; i+=2)
+	{
+		arr[i] -= number;
+	}
+}
+
+void arrEven(int number, int*& arr, int& arrSize)
+{
+	for (int i = 1; i < arrSize; i += 2)
+	{
+		arr[i] *= number;
+	}
+}
+
+void listOdd(List* list, int number)
+{
+	for (Node* p = list->head; p != nullptr; p = p->next->next)
+	{
+		p->data -= number;
+		if (p->next == nullptr) break;
+	}
+}
+
+void listEven(List* list, int number)
+{
+	for (Node* p = list->head->next; p != nullptr; p = p->next->next)
+	{
+		p->data *= number;
+		if (p->next == nullptr) break;
+	}
+}
+
+void task(List* list, int*& arr, int& arrSize)
+{
+	int number1;
+	int number2;
+	cout << "Введите число, на которое каждый четный элемент будет увеличен: ";
+	number1 = inputCheck();
+	cout << endl;
+
+
+	auto ArrOddStart = chrono::high_resolution_clock::now();
+	arrOdd(number1, arr, arrSize);
+	auto ArrOddEnd = chrono::high_resolution_clock::now();
+	timeTable.ArrOdd = (ArrOddEnd - ArrOddStart).count();
+
+	auto ListOddStart = chrono::high_resolution_clock::now();
+	listOdd(list, number1);
+	auto ListOddEnd = chrono::high_resolution_clock::now();
+	timeTable.ListOdd = (ListOddEnd - ListOddStart).count();
+	
+	cout << "Массив после уменьшения на ваше число:" << endl;
+	outArr(arr, arrSize);
+	cout << "Список после уменьшения на ваше число:" << endl;
+	outList(list);
+	cout << endl;
+
+	number2 = rand() % 5 + 1;
+
+	auto ArrEvenStart = chrono::high_resolution_clock::now();
+	arrEven(number2, arr, arrSize);
+	auto ArrEvenEnd = chrono::high_resolution_clock::now();
+	timeTable.ArrEven = (ArrEvenEnd - ArrEvenStart).count();
+
+	auto ListEvenStart = chrono::high_resolution_clock::now();
+	listEven(list, number2);
+	auto ListEvenEnd = chrono::high_resolution_clock::now();
+	timeTable.ListEven = (ListEvenEnd - ListEvenStart).count();
+
+	cout << "Массив после умножения на случайное число (" << number2 << "):" << endl;
+	outArr(arr, arrSize);
+	cout << "Список после умножения на случайное число (" << number2 << "):" << endl;
+	outList(list);
+	cout << endl;
+
 	system("pause");
 }
 
