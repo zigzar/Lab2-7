@@ -36,16 +36,16 @@ int getGetAns();						//
 void menu(List* list);					// 
 void fillMenu(List* list);				// 
 void deleteMenu(List* list);			// 
-void getMenu();							// 
+void getMenu(List* list);				// 
 
 // ОБЩИЕ ДЕЙСТВИЯ //
 void fillRand(List* list);				// 
 void fillMan(List* list);				// 
 void fillFile(List* list);				//
 void insert(List* list);				// 
-void getByValue();			// 
-void getByIndex();						// 
-void delByValue(List* list);						// 
+void getByValue(List* list);			// 
+void getByIndex(List* list);			// 
+void delByValue(List* list);			// 
 void delByIndex(List* list);			// 
 
 // ФУНКЦИИ МАССИВА //
@@ -58,6 +58,7 @@ void outArr();							//
 
 // ФУНКЦИИ СПИСКА //
 Node* newNode(int data, Node* next = nullptr, Node* prev = nullptr);
+void getListByIndex(List* list, int index);
 void destroyList(List* list);
 void pushBackList(List* list, int data);
 void outList(List* list);
@@ -134,7 +135,7 @@ void menu(List* list) {
 			deleteMenu(list);
 			break;
 		case 3:
-			getMenu();
+			getMenu(list);
 			break;
 		case 4:
 			exit(0);
@@ -170,17 +171,17 @@ void deleteMenu(List* list)
 	}
 }
 
-void getMenu()
+void getMenu(List* list)
 {
 	int answer = getGetAns();
 	switch (answer)
 	{
 	case 0:
-		getByIndex();
+		getByIndex(list);
 		system("pause");
 		break;
 	case 1:
-		getByValue();
+		getByValue(list);
 		system("pause");
 		break;
 	case 2:
@@ -224,7 +225,7 @@ void delByIndex(List* list)
 	deleteList(list, index);
 }
 
-void getByValue()
+void getByValue(List* list)
 {
 	int value;
 	int index = -1;
@@ -245,16 +246,17 @@ void getByValue()
 	else
 	{
 		cerr << "Значение не найдено. Попробуйте ввести другое число: ";
-		getByValue();
+		getByValue(list);
 	}
 }
 
-void getByIndex()
+void getByIndex(List* list)
 {
 	int index;
 	cout << "Введите индекс: ";
 	cin >> index;
 	getArr(index);
+	getListByIndex(list, index);
 }
 
 void getArr(int index)
@@ -748,11 +750,27 @@ void deleteList(List* list, int index)
 	}
 }
 
-void deleteList(List* list, int index)
+void getListByIndex(List* list, int index)
 {
-	if (index <= 0) popFrontList(list);
+	int number;
 
-	else if (index >= list->size-1) popBackList(list);
+	if (index < 0)
+	{
+		cerr << "Индекс выходит за рамки списка. Пожалуйста, введите индекс >0" << endl;
+		system("pause");
+		return;
+	}
+
+	if (index >= list->size)
+	{
+		cerr << "Индекс выходит за рамки списка. Пожалуйста, введите индекс в пределах списка" << endl;
+		system("pause");
+		return;
+	}
+
+	if (index == 0) number = list->head->data;
+
+	else if (index == list->size - 1) number = list->tail->data;
 
 	else if (index <= list->size / 2)
 	{
@@ -762,13 +780,7 @@ void deleteList(List* list, int index)
 			previous = previous->next;
 		}
 
-		Node* toDelete = previous->next;
-		previous->next = toDelete->next;
-		Node* next = toDelete->next;
-		delete toDelete;
-		next->prev = previous;
-
-		list->size--;
+		number = previous->next->data;
 	}
 
 	else if (index > list->size / 2)
@@ -779,14 +791,10 @@ void deleteList(List* list, int index)
 			next = next->prev;
 		}
 
-		Node* toDelete = next->prev;
-		next->prev = toDelete->prev;
-		Node* previous = toDelete->prev;
-		delete toDelete;
-		previous->next = next;
-
-		list->size--;
+		number = next->data;
 	}
+
+	cout << "Элемент " << number << " имеет индекс " << index << endl;
 }
 
 void outList(List* list)
