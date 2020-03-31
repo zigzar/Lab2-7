@@ -42,7 +42,7 @@ void getMenu();							//
 void fillRand(List* list);				// 
 void fillMan(List* list);				// 
 void fillFile(List* list);				//
-void insert();							// 
+void insert(List* list);				// 
 void getByValue();						// 
 void getByIndex();						// 
 void delByValue();						// 
@@ -62,6 +62,8 @@ void destroyList(List* list);
 void pushBackList(List* list, int data);
 void outList(List* list);
 void popFrontList(List* list);
+void pushFrontList(List* list, int data);
+void insertList(List* list, int data, int index);
 
 int* arr = nullptr;
 int arrSize = 0;
@@ -125,7 +127,7 @@ void menu(List* list) {
 			fillMenu(list);
 			break;
 		case 1:
-			insert();
+			insert(list);
 			break;
 		case 2:
 			deleteMenu();
@@ -317,7 +319,7 @@ void fillFile(List* list)
 	}
 }
 
-void insert()
+void insert(List* list)
 {
 	int value;
 	int index;
@@ -331,9 +333,12 @@ void insert()
 	cout << endl << endl;
 
 	insertArr(value, index);
+	insertList(list, value, index);
 
-	cout << "Массив/список после изменений:" << endl;
+	cout << "Массив после изменений:" << endl;
 	outArr();
+	cout << "Список после изменений:" << endl;
+	outList(list);
 	system("pause");
 }
 
@@ -346,11 +351,12 @@ void destroyArr()
 
 void insertArr(int value, int index)
 {
+	if (index < 0) index = 0;
 	if (index >= arrSize)
 	{
 		pushBackArr(value);
-	}
-	else if (index >= 0)
+	} 
+	else 
 	{
 		int* newArr = new int[arrSize + 1];
 		for (int i = arrSize; i > index; i--)
@@ -366,12 +372,6 @@ void insertArr(int value, int index)
 		newArr[index] = value;
 		arrSize++;
 		arr = newArr;
-	}
-	else
-	{
-		cerr << "Указан неверный индекс. Пожалуйста введите другой индекс" << endl;
-		system("pause");
-		insert();
 	}
 }
 
@@ -598,6 +598,26 @@ void pushBackList(List* list, int data)
 	list->size++;
 }
 
+void pushFrontList(List* list, int data)
+{
+	if (list->size > 1)
+	{
+		Node* temp = list->head;
+		list->head = newNode(data, list->head, nullptr);
+		temp->prev = list->head;
+	}
+	else if (list->size == 1)
+	{
+		list->head = newNode(data, list->head, nullptr);
+		list->tail->prev = list->head;
+	}
+	else
+	{
+		list->head = list->tail = newNode(data, list->head, list->tail);
+	}
+	list->size++;
+}
+
 void popFrontList(List* list)
 {
 	if (list->size > 1)
@@ -614,6 +634,47 @@ void popFrontList(List* list)
 	}
 
 	list->size--;
+}
+
+void insertList(List* list, int data, int index)
+{
+	if (index <= 0) pushFrontList(list, data);
+
+	else if (index == list->size || index > list->size) pushBackList(list, data);
+
+	else if (index <= list->size / 2)
+	{
+		Node* previous = list->head;
+		for (int i = 0; i < index - 1; i++)
+		{
+			previous = previous->next;
+		}
+
+		Node* node = newNode(data, previous->next, previous);
+
+		previous->next = node;
+		Node* next = node->next;
+		next->prev = node;
+
+		list->size++;
+	}
+
+	else if (index > list->size / 2)
+	{
+		Node* next = list->tail;
+		for (int i = list->size - 1; index < i; i--)
+		{
+			next = next->prev;
+		}
+
+		Node* node = newNode(data, next, next->prev);
+
+		next->prev = node;
+		Node* previous = node->prev;
+		previous->next = node;
+
+		list->size++;
+	}
 }
 
 void outList(List* list)
