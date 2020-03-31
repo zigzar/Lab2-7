@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <fstream>
 #include <ctime>
@@ -24,6 +25,22 @@ struct List														// Список
 	int size = 0;												// Размер списка
 };
 
+struct Table													// Таблица времени
+{
+	float ArrCtn;												// Время создания массива
+	float ArrIns;												// Время вставки элемента в массив
+	float ArrDelVal;											// Время удаления элемента из массива по значению
+	float ArrDelInd;											// Время удаления элемента из массива по индексу
+	float ArrGetVal;											// Время получения элемента из массива значению
+	float ArrGetInd;											// Время получения элемента из массива индексу
+	float ListCtn;												// Время создания списка
+	float ListIns;												// Время вставки элемента в список
+	float ListDelVal;											// Время удаления элемента из списка по значению
+	float ListDelInd;											// Время удаления элемента из списка по индексу
+	float ListGetVal;											// Время получения элемента из списка по значению
+	float ListGetInd;											// Время получения элемента из списка по индексу
+};
+
 const string dataFile = "data.txt";								// Файл с пользовательскими данными
 
 // МЕНЮ. ГРАФИЧЕСКАЯ ЧАСТЬ //
@@ -47,6 +64,7 @@ void getByValue(List* list, int*& arr, int& arrSize);			// Получить эл
 void getByIndex(List* list, int*& arr, int& arrSize);			// Получить элемент по индексу
 void delByValue(List* list, int*& arr, int& arrSize);			// Удалить элемент по значению
 void delByIndex(List* list, int*& arr, int& arrSize);			// Удалить элемент по индексу
+void showTable();												// Вывести в консоль таблицу времени
 
 // ФУНКЦИИ МАССИВА //
 void outArr(int*& arr, int& arrSize);							// Вывести массив в консоль
@@ -72,6 +90,8 @@ void deleteListByValue(List* list, int value);					// Удалить элеме�
 void getListByIndex(List* list, int index);						// Получить элемент массива по индексу
 void getListByValue(List* list, int value);						// Получить элемент массива по значению
 
+Table timeTable;												// Таблица времени
+
 int main()
 {
 	setlocale(LC_ALL, "russian");
@@ -84,7 +104,7 @@ int main()
 
 int getAns() {
 	int choice = 0;
-	int options = 5;
+	int options = 6;
 	int ch;
 	while (true) {
 		system("cls");
@@ -104,7 +124,10 @@ int getAns() {
 		if (choice == 3) cout << "-> Получить элемент" << endl;
 		else  cout << "   Получить элемент" << endl;
 
-		if (choice == 4) cout << "-> Выход" << endl;
+		if (choice == 4) cout << "-> Таблица времени" << endl;
+		else  cout << "   Таблица времени" << endl;
+
+		if (choice == 5) cout << "-> Выход" << endl;
 		else  cout << "   Выход" << endl;
 
 		ch = _getch();
@@ -141,6 +164,9 @@ void menu(List* list, int*& arr, int& arrSize) {
 			getMenu(list, arr, arrSize);
 			break;
 		case 4:
+			showTable();
+			break;
+		case 5:
 			exit(0);
 			break;
 		}
@@ -209,8 +235,15 @@ void delByValue(List* list, int*& arr, int& arrSize)
 	}
 	if (index != -1)
 	{
+		auto ArrDelValStart = chrono::high_resolution_clock::now();
 		deleteArrByValue(value, arr, arrSize);
+		auto ArrDelValEnd = chrono::high_resolution_clock::now();
+		timeTable.ArrDelVal = (ArrDelValEnd - ArrDelValStart).count();
+
+		auto ListDelValStart = chrono::high_resolution_clock::now();
 		deleteListByValue(list, value);
+		auto ListDelValEnd = chrono::high_resolution_clock::now();
+		timeTable.ListDelVal = (ListDelValEnd - ListDelValStart).count();
 	}
 	else
 	{
@@ -236,8 +269,32 @@ void delByIndex(List* list, int*& arr, int& arrSize)
 	int index;
 	cout << "Введите индекс: ";
 	cin >> index;
+	auto ArrDelIndStart = chrono::high_resolution_clock::now();
 	deleteArrByIndex(index, arr, arrSize);
+	auto ArrDelIndEnd = chrono::high_resolution_clock::now();
+	timeTable.ArrDelInd = (ArrDelIndEnd - ArrDelIndStart).count();
+
+	auto ListDelIndStart = chrono::high_resolution_clock::now();
 	deleteListByIndex(list, index);
+	auto ListDelIndEnd = chrono::high_resolution_clock::now();
+	timeTable.ListDelInd = (ListDelIndEnd - ListDelIndStart).count();
+}
+
+void showTable()
+{
+	cout.setf(ios::fixed);
+	cout.precision(3);
+	cout << setw(100) << "Таблица времени выполнения действий над массивом и списком. Все данные указаны в с\n"
+	<< setw(100) << "________________________________________________________________________________________________________________________\n";
+	cout << setw(50) << "Массив" << setw(50) << "Список\n";
+	cout << "Время создания\t\t\t\t" << setw(9) << timeTable.ArrCtn / 900000 << setw(49) << timeTable.ListCtn / 900000 << "\n";
+	cout << "Время вставки элемента\t\t\t" << setw(9) << timeTable.ArrIns / 900000 << setw(49) << timeTable.ListIns / 900000 << "\n";
+	cout << "Время удаления элемента по значению\t" << setw(9) << timeTable.ArrDelVal / 900000 << setw(49) << timeTable.ListDelVal / 900000 << "\n";
+	cout << "Время удаления элемента по индексу\t" << setw(9) << timeTable.ArrDelInd / 900000 << setw(49) << timeTable.ListDelInd / 900000 << "\n";
+	cout << "Время получения элемента по значению\t" << setw(9) << timeTable.ArrGetVal / 900000 << setw(49) << timeTable.ListGetVal / 900000 << "\n";
+	cout << "Время получения элемента по индексу\t" << setw(9) << timeTable.ArrGetInd / 900000 << setw(49) << timeTable.ListGetInd / 900000 << "\n";
+	cout << "\n\n";
+	system("pause");
 }
 
 void getByValue(List* list, int*& arr, int& arrSize)
@@ -256,8 +313,15 @@ void getByValue(List* list, int*& arr, int& arrSize)
 	}
 	if (index != -1)
 	{
+		auto ArrGetValStart = chrono::high_resolution_clock::now();
 		getArrByValue(value, arr, arrSize);
+		auto ArrGetValEnd = chrono::high_resolution_clock::now();
+		timeTable.ArrGetVal = (ArrGetValEnd - ArrGetValStart).count();
+
+		auto ListGetValStart = chrono::high_resolution_clock::now();
 		getListByValue(list, value);
+		auto ListGetValEnd = chrono::high_resolution_clock::now();
+		timeTable.ListGetVal = (ListGetValEnd - ListGetValStart).count();
 	}
 	else
 	{
@@ -294,8 +358,16 @@ void getByIndex(List* list, int*& arr, int& arrSize)
 	int index;
 	cout << "Введите индекс: ";
 	cin >> index;
+
+	auto ArrGetIndStart = chrono::high_resolution_clock::now();
 	getArrByIndex(index, arr, arrSize);
+	auto ArrGetIndEnd = chrono::high_resolution_clock::now();
+	timeTable.ArrGetInd = (ArrGetIndEnd - ArrGetIndStart).count();
+	
+	auto ListGetIndStart = chrono::high_resolution_clock::now();
 	getListByIndex(list, index);
+	auto ListGetIndEnd = chrono::high_resolution_clock::now();
+	timeTable.ListGetInd = (ListGetIndEnd - ListGetIndStart).count();
 }
 
 void getArrByIndex(int index, int*& arr, int& arrSize)
@@ -314,19 +386,33 @@ void outArr(int*& arr, int& arrSize)
 
 void fillRand(List* list, int*& arr, int& arrSize)
 {
+	float arrayTime = 0;
+	float listTime = 0;
 	cout << "Введите размерность массива/списка: ";
 	arrSize = inputCheck();
 	arr = new int[arrSize];
 	for (int temp, i = 0; i < arrSize; i++)
 	{
 		 temp = rand() % 100;
+
+		 auto ArrRanCtnStart = chrono::high_resolution_clock::now();
 		 arr[i] = temp;
+		 auto ArrRanCtnEnd = chrono::high_resolution_clock::now();
+		 arrayTime += (ArrRanCtnEnd - ArrRanCtnStart).count();
+
+		 auto ListRanCtnStart = chrono::high_resolution_clock::now();
 		 pushBackList(list, temp);
+		 auto ListRanCtnEnd = chrono::high_resolution_clock::now();
+		 listTime += (ListRanCtnEnd - ListRanCtnStart).count();
 	}
+	timeTable.ArrCtn = arrayTime;
+	timeTable.ListCtn = listTime;
 }
 
 void fillMan(List* list, int*& arr, int& arrSize)
 {
+	float arrayTime = 0;
+	float listTime = 0;
 	cout << "Введите значения через пробел и нажмите Enter:" << endl;
 	string buffer;
 	string number;
@@ -336,14 +422,24 @@ void fillMan(List* list, int*& arr, int& arrSize)
 	cin.clear();
 	while (getline(bufStream, number, ' '))
 	{
+		auto ArrManCtnStart = chrono::high_resolution_clock::now();
 		pushBackArr(stoi(number), arr, arrSize);
-		pushBackList(list, stoi(number));
-	}
+		auto ArrManCtnEnd = chrono::high_resolution_clock::now();
+		arrayTime += (ArrManCtnEnd - ArrManCtnStart).count();
 
+		auto ListManCtnStart = chrono::high_resolution_clock::now();
+		pushBackList(list, stoi(number));
+		auto ListManCtnEnd = chrono::high_resolution_clock::now();
+		arrayTime += (ListManCtnEnd - ListManCtnStart).count();
+	}
+	timeTable.ArrCtn = arrayTime;
+	timeTable.ListCtn = listTime;
 }
 
 void fillFile(List* list, int*& arr, int& arrSize)
 {
+	float arrayTime = 0;
+	float listTime = 0;
 	ifstream fin;
 	try
 	{
@@ -355,8 +451,15 @@ void fillFile(List* list, int*& arr, int& arrSize)
 		bufStream << buffer;
 		while (getline(bufStream, number, ' '))
 		{
+			auto ArrFileCtnStart = chrono::high_resolution_clock::now();
 			pushBackArr(stoi(number), arr, arrSize);
+			auto ArrFileCtnEnd = chrono::high_resolution_clock::now();
+			arrayTime += (ArrFileCtnEnd - ArrFileCtnStart).count();
+
+			auto ListFileCtnStart = chrono::high_resolution_clock::now();
 			pushBackList(list, stoi(number));
+			auto ListFileCtnEnd = chrono::high_resolution_clock::now();
+			arrayTime += (ListFileCtnEnd - ListFileCtnStart).count();
 		}
 		fin.close();
 	}
@@ -367,6 +470,8 @@ void fillFile(List* list, int*& arr, int& arrSize)
 		fout.open(dataFile);
 		fout.close();
 	}
+	timeTable.ArrCtn = arrayTime;
+	timeTable.ListCtn = listTime;
 }
 
 void insert(List* list, int*& arr, int& arrSize)
@@ -382,8 +487,15 @@ void insert(List* list, int*& arr, int& arrSize)
 	index = inputCheck();
 	cout << endl << endl;
 
+	auto ArrInsStart = chrono::high_resolution_clock::now();
 	insertArr(value, index, arr, arrSize);
+	auto ArrInsEnd = chrono::high_resolution_clock::now();
+	timeTable.ArrIns = (ArrInsEnd - ArrInsStart).count();
+
+	auto ListInsStart = chrono::high_resolution_clock::now();
 	insertList(list, value, index);
+	auto ListInsEnd = chrono::high_resolution_clock::now();
+	timeTable.ListIns = (ListInsEnd - ListInsStart).count();
 
 	cout << "Массив после изменений:" << endl;
 	outArr(arr, arrSize);
