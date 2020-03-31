@@ -69,6 +69,7 @@ void popFrontList(List* list);
 void pushFrontList(List* list, int data);
 void insertList(List* list, int data, int index);
 void deleteListByIndex(List* list, int index);
+void deleteListByValue(List* list, int value);
 
 int* arr = nullptr;
 int arrSize = 0;
@@ -210,11 +211,12 @@ void delByValue(List* list)
 	if (index != -1)
 	{
 		deleteArrByValue(value);
-		//deleteListByValue(list, index);
+		deleteListByValue(list, value
+		);
 	}
 	else
 	{
-		cerr << "Значение не найдено. Попробуйте ввести другое число: ";
+		cerr << "Значение не найдено. Попробуйте ввести другое число." << endl;
 		delByValue(list);
 	}
 }
@@ -787,6 +789,33 @@ void deleteListByIndex(List* list, int index)
 
 		list->size--;
 	}
+}
+
+void deleteListByValue(List* list, int value)
+{
+	if (list->tail->data == value)
+	{
+		popBackList(list);
+	}
+	else if (list->head->data == value)
+	{
+		popFrontList(list);
+	}
+	else
+	{
+		for (Node* p = list->head->next; p != nullptr; p = p->next)
+		{
+			if (p->data == value)
+			{
+				p->prev->next = p->next;
+				p->next->prev = p->prev;
+				delete p;
+				break;
+			}
+		}
+	}
+
+	list->size--;
 }
 
 void getListByIndex(List* list, int index)
