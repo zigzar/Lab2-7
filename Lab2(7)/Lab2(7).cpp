@@ -39,6 +39,9 @@ void deleteMenu();						//
 void getMenu();							// 
 
 // ОБЩИЕ ДЕЙСТВИЯ //
+void fillRand(List* list);				// 
+void fillMan(List* list);				// 
+void fillFile(List* list);				//
 void insert();							// 
 void getByValue();						// 
 void getByIndex();						// 
@@ -47,13 +50,11 @@ void delByIndex();						//
 
 // ФУНКЦИИ МАССИВА //
 void getArr(int index);					// 
+void destroyArr();						//
 void deleteArr(int index);				// 
 void insertArr(int value, int index);	// 
 void pushBackArr(int value);			// 
 void outArr();							// 
-void fillRand(List* list);						// 
-void fillMan(List* list);				// 
-void fillFile(List* list);				// 
 
 // ФУНКЦИИ СПИСКА //
 Node* newNode(int data, Node* next = nullptr, Node* prev = nullptr);
@@ -258,6 +259,7 @@ void outArr()
 	}
 	cout << endl;
 }
+
 void fillRand(List* list)
 {
 	cout << "Введите размерность массива/списка: ";
@@ -268,6 +270,50 @@ void fillRand(List* list)
 		 temp = rand() % 100;
 		 arr[i] = temp;
 		 pushBackList(list, temp);
+	}
+}
+
+void fillMan(List* list)
+{
+	cout << "Введите значения через пробел и нажмите Enter:" << endl;
+	string buffer;
+	string number;
+	stringstream bufStream;
+	getline(cin, buffer);
+	bufStream << buffer;
+	cin.clear();
+	while (getline(bufStream, number, ' '))
+	{
+		pushBackArr(stoi(number));
+		pushBackList(list, stoi(number));
+	}
+
+}
+
+void fillFile(List* list)
+{
+	ifstream fin;
+	try
+	{
+		fin.open(dataFile);
+		string buffer;
+		string number;
+		stringstream bufStream;
+		getline(fin, buffer);
+		bufStream << buffer;
+		while (getline(bufStream, number, ' '))
+		{
+			pushBackArr(stoi(number));
+			pushBackList(list, stoi(number));
+		}
+		fin.close();
+	}
+	catch (const exception&)
+	{
+		cout << "Ошибка открытия файла" << endl;
+		ofstream fout;
+		fout.open(dataFile);
+		fout.close();
 	}
 }
 
@@ -361,49 +407,6 @@ void pushBackArr(int value)
 	newArr[arrSize] = value;
 	arrSize++;
 	arr = newArr;
-}
-
-void fillMan(List* list)
-{
-	cout << "Введите значения через пробел и нажмите Enter:" << endl;
-	string buffer;
-	string number;
-	stringstream bufStream;
-	getline(cin, buffer);
-	bufStream << buffer;
-	cin.clear();
-	while (getline(bufStream, number, ' '))
-	{
-		pushBackArr(stoi(number));
-		pushBackList(list, stoi(number));
-	}
-		
-}
-void fillFile(List* list)
-{
-	ifstream fin;
-	try
-	{
-		fin.open(dataFile);
-		string buffer;
-		string number;
-		stringstream bufStream;
-		getline(fin, buffer);
-		bufStream << buffer;
-		while (getline(bufStream, number, ' '))
-		{
-			pushBackArr(stoi(number));
-			pushBackList(list, stoi(number));
-		}
-		fin.close();
-	}
-	catch (const exception&)
-	{
-		cout << "Ошибка открытия файла" << endl;
-		ofstream fout;
-		fout.open(dataFile);
-		fout.close();
-	}
 }
 
 int getFillAns() {
