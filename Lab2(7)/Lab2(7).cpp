@@ -109,6 +109,10 @@ Table timeTable;												// Таблица времени
 
 int main()
 {
+	CONSOLE_CURSOR_INFO structCursorInfo;
+	GetConsoleCursorInfo(h, &structCursorInfo);
+	structCursorInfo.bVisible = FALSE;
+	SetConsoleCursorInfo(h, &structCursorInfo);
 	setlocale(LC_ALL, "russian");
 	srand(time(NULL));
 	int* arr = nullptr;											// Массив
